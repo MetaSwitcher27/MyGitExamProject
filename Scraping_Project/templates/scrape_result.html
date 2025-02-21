@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des livres</title>
+    <style>
+      /* Quelques styles simples pour une meilleure présentation */
+      .table { border-collapse: collapse; width: 100%; }
+      .table th, .table td { border: 1px solid #ddd; padding: 8px; }
+      .table th { background-color: #f2f2f2; }
+      img { max-width: 100%; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Liste des livres</h1>
+    <!-- Formulaire pour filtrer par prix maximum -->
+    <form method="get" action="{{ url_for('scrape') }}">
+        <label for="max_price">Prix max :</label>
+        <input type="text" name="max_price" id="max_price" value="{{ max_price }}">
+        <input type="submit" value="Filtrer">
+        {% if pages != "inconnu" %}
+          <input type="hidden" name="pages" value="{{ pages }}">
+        {% endif %}
+    </form>
+    
+    <!-- Liens optionnels pour trier par prix -->
+    <p>
+      Trier par prix :
+      <a href="{{ url_for('scrape', sort='asc', max_price=max_price, pages=pages) }}">Croissant</a> |
+      <a href="{{ url_for('scrape', sort='desc', max_price=max_price, pages=pages) }}">Décroissant</a>
+    </p>
+
+    <!-- Affichage du tableau des livres -->
+    {{ table_html|safe }}
+    
+    <!-- Ajout des graphes -->
+    <h2>Visualisations</h2>
+    <div>
+      <img src="{{ url_for('static', filename='distribution_prix.png') }}" alt="Distribution des prix">
+      <img src="{{ url_for('static', filename='rating_vs_price.png') }}" alt="Rating vs Price">
+    </div>
+    
+    <br>
+    <p><a href="{{ url_for('home') }}">Retour à l'accueil</a></p>
+</body>
+</html>
